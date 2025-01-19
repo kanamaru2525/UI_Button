@@ -1,55 +1,321 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>リンク5列</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
     <style>
-        /* コンテナのスタイル */
-        .link-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            padding: 10px;
-        }
+      html {
+        touch-action: manipulation;
+        overflow: hidden;
+      }
 
-        /* スマホ向けに1列に変更 */
-        @media (max-width: 600px) {
-            .link-container {
-                grid-template-columns: repeat(1, 1fr);
-            }
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+      }
+      .display {
+        font-size: 24px;
+        padding: 10px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        text-align: center;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3列 */
+        grid-template-rows: repeat(4, auto); /* 4行 */
+        /* gap: 10px; */
+        gap: var(--grid-container-gap); /* ギャップを変数で指定 */
+        width: 95vw; /* スマホで横幅をほぼ埋める */
+        max-width: 480px; /* 最大幅を指定 */
+        margin: auto;
+      }
 
-        /* 各リンクのスタイル */
-        .link-item {
-            text-align: center;
-            padding: 10px;
-            background-color: #f4f4f4;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #000;
-            border: 1px solid #ccc;
-            transition: background-color 0.3s;
-        }
+      .grid-item {
+        font-size: 2rem;
+        padding: 15px;
+        text-align: center;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        /* border-radius: 90px; */
+        border-radius: var(--grid-item-border-radius);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s, transform 0.2s;
+        aspect-ratio: 1;
+        width: 100%;
+      }
 
-        /* ホバー時の背景色変更 */
-        .link-item:hover {
-            background-color: #e0e0e0;
-        }
+      .grid-item:active {
+        background-color: #0056b3;
+        transform: scale(0.95); /* クリック時に少し縮む */
+      }
+
+      .item-0 {
+        grid-column: 2; /* 中央に配置 */
+      }
+
+      /* 各種CSSスタイル */
+      .style1 {
+        --grid-item-border-radius: 90px;
+        --grid-container-gap: 20px;
+      }
+      .style2 {
+        --grid-item-border-radius: 90px;
+        --grid-container-gap: 50px;
+      }
+      .style3 {
+        --grid-item-border-radius: 90px;
+        --grid-container-gap: 90px;
+      }
+      .style4 {
+        --grid-item-border-radius: 8px;
+        --grid-container-gap: 90px;
+      }
+      .style5 {
+        --grid-item-border-radius: 8px;
+        --grid-container-gap: 90px;
+      }
+      .style6 {
+        --grid-item-border-radius: 8px;
+        --grid-container-gap: 90px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        text-align: center;
+      }
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 1);
+        z-index: 999;
+      }
+      .close-btn {
+        margin-top: 10px;
+        padding: 5px 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .close-btn:hover {
+        background: #0056b3;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="calculator">
+      <div class="display" id="display">0</div>
+      <div class="grid-container">
+        <button class="grid-item">1</button>
+        <button class="grid-item">2</button>
+        <button class="grid-item">3</button>
+        <button class="grid-item">4</button>
+        <button class="grid-item">5</button>
+        <button class="grid-item">6</button>
+        <button class="grid-item">7</button>
+        <button class="grid-item">8</button>
+        <button class="grid-item">9</button>
+        <button class="grid-item item-0">0</button>
+      </div>
+    </div>
 
-<div class="link-container">
-    <a href="index1.html" class="link-item">四角-パディング10</a>
-    <a href="index2.html" class="link-item">四角-パディング50</a>
-    <a href="index3.html" class="link-item">四角-パディング90</a>
-</div>
-<div class="link-container">
-    <a href="index1_c.html" class="link-item">マル-パディング10</a>
-    <a href="index2_c.html" class="link-item">マル-パディング50</a>
-    <a href="index3_c.html" class="link-item">マル-パディング90</a>
-</div>
+    <div class="modal-overlay" id="initialModalOverlay"></div>
+    <div class="modal" id="initialModal">
+      <p id="initialModalMessage"></p>
+    </div>
 
-</body>
+    <div class="modal-overlay" id="resultModalOverlay"></div>
+    <div class="modal" id="resultModal">
+      <p id="resultModalMessage"></p>
+      <button class="close-btn" id="retryButton">再度挑戦</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const cssClasses = [
+          "style1",
+          "style2",
+          "style3",
+          "style4",
+          "style5",
+          "style6",
+        ];
+        let attempts = 0;
+        let results = [];
+        let MaxNum = 42;
+        let allocation = MaxNum / cssClasses.length;
+
+        // 60回の挑戦の中で、各CSSを10回ずつランダムに選ぶ
+        const cssSequence = [];
+
+        // 60回の挑戦で、各CSSを10回ずつ振り分ける
+        while (cssSequence.length < MaxNum) {
+          cssClasses.forEach((css) => {
+            if (cssSequence.filter((c) => c === css).length < allocation) {
+              cssSequence.push(css);
+            }
+          });
+        }
+        // ランダムに並び替える前にログ出力
+        console.log("並べる前:", cssSequence);
+
+        // ランダムに並び替え
+        cssSequence.sort(() => Math.random() - 0.5);
+
+        // ランダムに並び替えた後にログ出力
+        console.log("並べた後:", cssSequence);
+
+        // ランダムな5桁の数字を生成する関数
+        function generateRandomFiveDigitNumber() {
+          return Math.floor(10000 + Math.random() * 90000);
+        }
+
+        // CSS切り替えの関数
+        const challengeCSS = () => {
+          const selectedCSS = cssSequence[attempts]; // ランダムに選ばれたCSS
+          const gridContainer = document.querySelector(".grid-container");
+          gridContainer.className = "grid-container " + selectedCSS; // CSSを変更
+
+          const randomFiveDigitNumber = generateRandomFiveDigitNumber(); // ランダムな5桁の数字
+          const initialModalOverlay = document.getElementById(
+            "initialModalOverlay"
+          );
+          const initialModal = document.getElementById("initialModal");
+          const initialModalMessage = document.getElementById(
+            "initialModalMessage"
+          );
+
+          const resultModalOverlay =
+            document.getElementById("resultModalOverlay");
+          const resultModal = document.getElementById("resultModal");
+          const resultModalMessage =
+            document.getElementById("resultModalMessage");
+          const retryButton = document.getElementById("retryButton");
+
+          function showInitialModal(message) {
+            initialModalMessage.textContent = message;
+            initialModalOverlay.style.display = "block";
+            initialModal.style.display = "block";
+
+            setTimeout(() => {
+              initialModalOverlay.style.display = "none";
+              initialModal.style.display = "none";
+            }, 3000);
+          }
+
+          function showResultModal(message) {
+            resultModalMessage.textContent = message;
+            resultModalOverlay.style.display = "block";
+            resultModal.style.display = "block";
+          }
+
+          showInitialModal(`5桁の数字 \n ${randomFiveDigitNumber}`);
+
+          const display = document.getElementById("display");
+          const buttons = document.querySelectorAll(".grid-item");
+
+          let userInput = ""; // ユーザー入力リセット
+          let startTime = null;
+          let incorrectAttempts = 0;
+
+          const targetSequence = randomFiveDigitNumber.toString().split("");
+
+          buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+              const value = button.textContent;
+              console.log(value);
+              if (startTime === null) {
+                startTime = new Date();
+              }
+
+              const nextExpectedValue = targetSequence[userInput.length];
+
+              if (value === nextExpectedValue) {
+                userInput += value;
+                display.textContent = userInput;
+              } else {
+                incorrectAttempts++;
+                userInput = ""; // 入力リセット
+                display.textContent = "0"; // ディスプレイもリセット
+              }
+
+              if (userInput.length === 5) {
+                if (userInput === randomFiveDigitNumber.toString()) {
+                  const endTime = new Date();
+                  const timeTaken = (endTime - startTime) / 1000;
+                  showResultModal(`attempts ${attempts + 1}回目`);
+
+                  results.push({
+                    css: selectedCSS,
+                    timeTaken: timeTaken,
+                    incorrectAttempts: incorrectAttempts,
+                    date: new Date().toISOString(),
+                  });
+
+                  attempts++; // インクリメントする
+
+                  if (attempts < MaxNum) {
+                    resultModalMessage.textContent = `attempts ${attempts}回目`; // 次の試行のメッセージ
+                  } else {
+                    // すべての挑戦が終わったら結果を出力
+                    const fileName = `results_${new Date().toISOString()}.json`;
+                    const blob = new Blob([JSON.stringify(results, null, 2)], {
+                      type: "application/json",
+                    });
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName;
+                    link.click();
+                  }
+
+                  userInput = ""; // 正しい入力後にリセット
+                } else {
+                  alert("入力が間違っています。");
+                  userInput = ""; // 入力リセット
+                  display.textContent = "0"; // ディスプレイリセット
+                }
+              }
+            });
+          });
+
+          retryButton.addEventListener("click", () => {
+            resultModalOverlay.style.display = "none";
+            resultModal.style.display = "none";
+            userInput = ""; // リセット
+            display.textContent = "0"; // ディスプレイリセット
+            challengeCSS(); // 再度挑戦
+          });
+        };
+
+        challengeCSS(); // 初期CSSでの挑戦開始
+      });
+    </script>
+  </body>
 </html>
