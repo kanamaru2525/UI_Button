@@ -105,6 +105,7 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         z-index: 1000;
         text-align: center;
+        font-size: larger;
       }
       .modal-overlay {
         display: none;
@@ -154,7 +155,7 @@
     <div class="modal-overlay" id="resultModalOverlay"></div>
     <div class="modal" id="resultModal">
       <p id="resultModalMessage"></p>
-      <button class="close-btn" id="retryButton">再度挑戦</button>
+      <button class="close-btn" id="retryButton">次へ</button>
     </div>
 
     <script>
@@ -236,7 +237,7 @@
             resultModal.style.display = "block";
           }
 
-          showInitialModal(`5桁の数字 \n ${randomFiveDigitNumber}`);
+          showInitialModal(`${randomFiveDigitNumber}`);
 
           const display = document.getElementById("display");
           const buttons = document.querySelectorAll(".grid-item");
