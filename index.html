@@ -158,182 +158,146 @@
       <button class="close-btn" id="retryButton">次へ</button>
     </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        try {
-          // CSSクラスのリスト
-          const cssClasses = ["style1", "style2", "style3", "style4", "style5", "style6"];
-          const MaxNum = 42; // 最大試行回数
-          const allocation = MaxNum / cssClasses.length; // 各CSSが使用される回数
-          let attempts = 0; // 現在の試行回数
-          let results = []; // 結果を保存
+    <script> 
+      document.addEventListener("DOMContentLoaded", () => { 
+        try { 
+          const cssClasses = ["style1", "style2", "style3", "style4", "style5", "style6"]; 
+          const MaxNum = 6; 
+          const allocation = MaxNum / cssClasses.length; 
+          const results = []; 
+          let attempts = 0; 
     
-          // CSSをランダムに割り振る配列
-          const cssSequence = [];
-          while (cssSequence.length < MaxNum) {
-            cssClasses.forEach((css) => {
-              if (cssSequence.filter((c) => c === css).length < allocation) {
-                cssSequence.push(css);
-              }
-            });
-          }
-          cssSequence.sort(() => Math.random() - 0.5);
+          const cssSequence = []; 
+          while (cssSequence.length < MaxNum) { 
+            cssClasses.forEach((css) => { 
+              if (cssSequence.filter((c) => c === css).length < allocation) { 
+                cssSequence.push(css); 
+              } 
+            }); 
+          } 
+          cssSequence.sort(() => Math.random() - 0.5); 
     
-          // DOM要素の取得
-          const display = document.getElementById("display");
-          const buttons = document.querySelectorAll(".grid-item");
-          const gridContainer = document.querySelector(".grid-container");
-          const initialModalOverlay = document.getElementById("initialModalOverlay");
-          const initialModal = document.getElementById("initialModal");
-          const initialModalMessage = document.getElementById("initialModalMessage");
-          const resultModalOverlay = document.getElementById("resultModalOverlay");
-          const resultModal = document.getElementById("resultModal");
-          const resultModalMessage = document.getElementById("resultModalMessage");
-          const retryButton = document.getElementById("retryButton");
+          const randomFiveDigitNumber = () => Math.floor(10000 + Math.random() * 90000); 
     
-          if (
-            !display ||
-            !buttons ||
-            !gridContainer ||
-            !initialModalOverlay ||
-            !initialModal ||
-            !initialModalMessage ||
-            !resultModalOverlay ||
-            !resultModal ||
-            !resultModalMessage ||
-            !retryButton
-          ) {
-            throw new Error("必要なDOM要素が見つかりません");
-          }
+          const initialModalOverlay = document.getElementById("initialModalOverlay"); 
+          const initialModal = document.getElementById("initialModal"); 
+          const initialModalMessage = document.getElementById("initialModalMessage"); 
     
-          // ランダムな5桁の数字を生成
-          const generateRandomFiveDigitNumber = () => {
-            return Math.floor(10000 + Math.random() * 90000);
-          };
+          const resultModalOverlay = document.getElementById("resultModalOverlay"); 
+          const resultModal = document.getElementById("resultModal"); 
+          const resultModalMessage = document.getElementById("resultModalMessage"); 
+          const retryButton = document.getElementById("retryButton"); 
     
-          // 初期モーダルを表示する関数
-          const showInitialModal = (message) => {
-            try {
-              initialModalMessage.textContent = message;
-              initialModalOverlay.style.display = "block";
-              initialModal.style.display = "block";
+          const showStartButton = () => { 
+            resultModalMessage.textContent = "実験"; 
+            retryButton.textContent = "開始"; 
+            resultModalOverlay.style.display = "block"; 
+            resultModal.style.display = "block"; 
     
-              setTimeout(() => {
-                initialModalOverlay.style.display = "none";
-                initialModal.style.display = "none";
-              }, 3000);
-            } catch (error) {
-              console.error("初期モーダルの表示中にエラーが発生しました:", error);
-            }
-          };
+            retryButton.onclick = () => { 
+              resultModalOverlay.style.display = "none"; 
+              resultModal.style.display = "none"; 
+              challengeCSS(); 
+            }; 
+          }; 
     
-          // 結果モーダルを表示する関数
-          const showResultModal = (message) => {
-            try {
-              resultModalMessage.textContent = message;
-              resultModalOverlay.style.display = "block";
-              resultModal.style.display = "block";
-            } catch (error) {
-              console.error("結果モーダルの表示中にエラーが発生しました:", error);
-            }
-          };
+          const challengeCSS = () => { 
+            if (attempts >= MaxNum) { 
+              showFinalResults(); 
+              return; 
+            } 
     
-          // CSS切り替えと挑戦開始
-          const challengeCSS = () => {
-            try {
-              const selectedCSS = cssSequence[attempts]; // 現在のCSS
-              const randomFiveDigitNumber = generateRandomFiveDigitNumber(); // ランダムな5桁の数字
-              let userInput = ""; // ユーザー入力
-              let startTime = null; // 開始時間
-              let incorrectAttempts = 0; // 誤入力の回数
+            const selectedCSS = cssSequence[attempts]; 
+            const gridContainer = document.querySelector(".grid-container"); 
+            gridContainer.className = "grid-container " + selectedCSS; 
     
-              gridContainer.className = "grid-container " + selectedCSS; // CSSを変更
-              showInitialModal(`${randomFiveDigitNumber}`);
+            const targetNumber = randomFiveDigitNumber(); 
+            initialModalMessage.textContent = targetNumber; 
     
-              const targetSequence = randomFiveDigitNumber.toString().split("");
+            initialModalOverlay.style.display = "block"; 
+            initialModal.style.display = "block"; 
     
-              // ボタンイベントの登録
-              buttons.forEach((button) => {
-                button.addEventListener("click", () => {
-                  try {
-                    const value = button.textContent;
+            setTimeout(() => { 
+              initialModalOverlay.style.display = "none"; 
+              initialModal.style.display = "none"; 
+            }, 3000); 
     
-                    if (startTime === null) {
-                      startTime = new Date();
-                    }
+            const display = document.getElementById("display"); 
+            display.textContent = "0"; 
     
-                    const nextExpectedValue = targetSequence[userInput.length];
-                    if (value === nextExpectedValue) {
-                      userInput += value;
-                      display.textContent = userInput;
-                    } else {
-                      incorrectAttempts++;
-                      userInput = ""; // リセット
-                      display.textContent = "0"; // リセット
-                    }
+            let userInput = ""; 
+            let startTime = null; 
     
-                    if (userInput.length === 5) {
-                      if (userInput === randomFiveDigitNumber.toString()) {
-                        const endTime = new Date();
-                        const timeTaken = (endTime - startTime) / 1000;
+            const targetSequence = targetNumber.toString().split(""); 
     
-                        results.push({
-                          css: selectedCSS,
-                          timeTaken,
-                          incorrectAttempts,
-                          date: new Date().toISOString(),
-                        });
+            const buttons = document.querySelectorAll(".grid-item"); 
+            buttons.forEach((button) => { 
+              button.onclick = () => { 
+                if (!startTime) startTime = new Date(); 
     
-                        attempts++;
-                        if (attempts < MaxNum) {
-                          showResultModal(`attempts ${attempts}回目`);
-                        } else {
-                          const fileName = `results_${new Date().toISOString()}.json`;
-                          const blob = new Blob([JSON.stringify(results, null, 2)], {
-                            type: "application/json",
-                          });
-                          const link = document.createElement("a");
-                          link.href = URL.createObjectURL(blob);
-                          link.download = fileName;
-                          link.click();
-                        }
+                const value = button.textContent; 
+                const nextExpectedValue = targetSequence[userInput.length]; 
     
-                        userInput = ""; // 入力リセット
-                      } else {
-                        alert("入力が間違っています。");
-                        userInput = ""; // 入力リセット
-                        display.textContent = "0"; // 表示リセット
-                      }
-                    }
-                  } catch (error) {
-                    console.error("ボタンクリック中にエラーが発生しました:", error);
-                  }
-                });
-              });
+                if (value === nextExpectedValue) { 
+                  userInput += value; 
+                  display.textContent = userInput; 
     
-              // リトライボタンの動作
-              retryButton.addEventListener("click", () => {
-                try {
-                  resultModalOverlay.style.display = "none";
-                  resultModal.style.display = "none";
-                  userInput = "";
-                  display.textContent = "0";
-                  challengeCSS(); // 再挑戦
-                } catch (error) {
-                  console.error("リトライ中にエラーが発生しました:", error);
-                }
-              });
-            } catch (error) {
-              console.error("CSS切り替え中にエラーが発生しました:", error);
-            }
-          };
+                  if (userInput.length === 5) { 
+                    const endTime = new Date(); 
+                    const timeTaken = (endTime - startTime) / 1000; 
     
-          challengeCSS(); // 初回挑戦を開始
-        } catch (error) {
-          console.error("初期化中にエラーが発生しました:", error);
-        }
-      });
+                    results.push({ 
+                      css: selectedCSS, 
+                      timeTaken: timeTaken, 
+                      date: new Date().toISOString(), 
+                    }); 
+    
+                    attempts++; 
+                    showResultModal(`試行回数: ${attempts}回目`); 
+                  } 
+                } else { 
+                  display.style.color = "red"; 
+                  setTimeout(() => { 
+                    display.style.color = "black"; 
+                  }, 500); 
+                } 
+              }; 
+            }); 
+          }; 
+    
+          const showResultModal = (message) => { 
+            resultModalMessage.textContent = message; 
+            retryButton.textContent = attempts < MaxNum ? "次へ" : "終了"; 
+            resultModalOverlay.style.display = "block"; 
+            resultModal.style.display = "block"; 
+    
+            retryButton.onclick = () => { 
+              resultModalOverlay.style.display = "none"; 
+              resultModal.style.display = "none"; 
+    
+              if (attempts < MaxNum) { 
+                challengeCSS(); 
+              } else { 
+                const fileName = `results_${new Date().toISOString()}.json`; 
+                const blob = new Blob([JSON.stringify(results, null, 2)], { 
+                  type: "application/json", 
+                }); 
+                const link = document.createElement("a"); 
+                link.href = URL.createObjectURL(blob); 
+                link.download = fileName; 
+                link.click(); 
+              } 
+            }; 
+          }; 
+    
+          showStartButton(); 
+        } catch (error) { 
+          console.error("エラーが発生しました:", error); 
+        } 
+      }); 
     </script>
+    
+    
     
   </body>
 </html>
